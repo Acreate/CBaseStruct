@@ -184,7 +184,7 @@ dllStatus StrPtr strCreate();
  * @param arrayPtr 释放的字符串
  * @return 成功返回 0, -1 表示类型不匹配, 1 表示找不到
 */
-dllStatus int strree(const StrPtr* arrayPtr);
+dllStatus int strFree(const StrPtr* arrayPtr);
 /**
 * @brief 释放没有使用的字符串资源
 * @return 释放个数
@@ -219,6 +219,14 @@ dllStatus const char* strGetStdCString(const StrPtr* ptr, size_t checkSize, size
 */
 dllStatus size_t strCSet(const StrPtr* ptr, const BaseType data, size_t dataSize);
 /**
+ * @brief 追加一个标准的 C 字符串到末尾
+ * @param ptr 字符串资源
+ * @param data 追加的字符串
+ * @param dataSize 设置打字符串数据长度，若长度位置下不存在结束符，则设置为结束符，长度之前出现结束符，则按照最先出现长度设置
+ * @return 字符串资源的新长度
+*/
+dllStatus size_t strCAppend(const StrPtr* ptr, const BaseType data, size_t dataSize);
+/**
  * @brief 获取字符串，它是跨平台的
  * @param ptr 字符串资源
  * @param data 获取到的字符串指针
@@ -226,7 +234,19 @@ dllStatus size_t strCSet(const StrPtr* ptr, const BaseType data, size_t dataSize
  * @return 整个字符串占用的字符个数
 */
 dllStatus size_t strGet(const StrPtr* ptr, const BaseType* data, size_t* charWidth);
-
+/**
+ * @brief 读取一个文件，若失败则返回
+ * @param ptrFileName 文件名
+ * @param ptrFileContent 文件内容
+ * @return 成功返回 0，失败返回状态码
+*/
+dllStatus int strReadFile(const StrPtr* ptrFileName, StrPtr* ptrFileContent);
+/**
+* @brief 检查字符串资源是否有效
+* @param checkPtr 检测资源
+* @return 成功返回0
+*/
+dllStatus int strValid(const StrPtr* checkPtr);
 /**
 * @brief 创建一个数组
 * @return 数组引用, 失败返回 NULL

@@ -1,5 +1,6 @@
 ﻿#include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "DataStruct.h"
 
@@ -391,7 +392,7 @@ size_t strManageFree() {
 	ptrStringMenoryManagment.ids = NULL;
 	ptrStringMenoryManagment.dataWidth = ptrStringMenoryManagment.strLen = NULL;
 	ptrStringMenoryManagment.datas = NULL;
-	ptrStringMenoryManagment.size = ptrArrayMenoryManagment.currentUserIndex = 0;
+	ptrStringMenoryManagment.size = ptrStringMenoryManagment.currentUserIndex = 0;
 	return count;
 }
 
@@ -430,6 +431,57 @@ size_t strCSet(const StrPtr* ptr, const BaseType data, size_t dataSize) {
 				free( oldData );
 		}
 		return ptrStringMenoryManagment.strLen[index];
+	}
+
+	return 0;
+}
+
+size_t strCAppend(const StrPtr* ptr, const BaseType data, size_t dataSize) {
+	size_t index = ptr->ptr - ptrResourcesStartIndex, minIndex = getMinStrForeachIndex();;
+	if( index < minIndex ) {
+		// 获取最小长度
+		char* charData = data.dataPtr;
+		size_t foreachChar = 0;
+		for( ; foreachChar < dataSize; ++foreachChar ) {
+			if( charData[foreachChar] == '\0' ) {
+				dataSize = foreachChar;
+				break;
+			}
+		}
+		// data 存在字符串可被追加
+		if( dataSize > 0 ) {
+			// 旧的字符串
+			char* oldData = ptrStringMenoryManagment.datas[index].dataPtr;
+			// 字符宽度
+			const size_t dataWidth = sizeof( char ),
+						// 新的字符串大小
+						memsetSize = (ptrStringMenoryManagment.strLen[index] + newCreateSize);
+			ptrStringMenoryManagment.datas[index].dataPtr = malloc( memsetSize * dataWidth );
+			// 如果无法申请，则重置
+			if( !ptrStringMenoryManagment.datas[index].dataPtr )
+				ptrStringMenoryManagment.datas[index].dataPtr = oldData;
+
+			else {
+				// 新字符串的当前下标
+				size_t maxIndex = ptrStringMenoryManagment.strLen[index],
+						// 目标字符串的下标
+						current = 0;
+				foreachChar = 0;
+				for( ; foreachChar < maxIndex; ++foreachChar )
+					((char*)ptrStringMenoryManagment.datas[index].dataPtr)[foreachChar] = oldData[foreachChar];
+				// 拷贝 data 源
+				for( ; current < dataSize; ++foreachChar, ++current )
+					((char*)ptrStringMenoryManagment.datas[index].dataPtr)[foreachChar] = ((char*)data.dataPtr)[current];
+
+				((char*)ptrStringMenoryManagment.datas[index].dataPtr)[dataSize] = '\0';
+				ptrStringMenoryManagment.strLen[index] = memsetSize;
+				ptrStringMenoryManagment.dataWidth[index] = sizeof( char );
+				if( oldData )
+					free( oldData );
+			}
+			return ptrStringMenoryManagment.strLen[index];
+		}
+
 	}
 
 	return 0;
@@ -515,6 +567,40 @@ static void arrayRemove(const size_t index) {
 	ptrArrayMenoryManagment.datas[index] = NULL;
 	ptrArrayMenoryManagment.ids[index].ptr = 0;
 	ptrArrayMenoryManagment.arrayPtrSizes[index] = 0;
+}
+
+int strReadFile(const StrPtr* ptrFileName, StrPtr* ptrFileContent) {
+	// 其中出现一个无效资源，那么就会被直接返回
+	if( strValid( ptrFileName ) || strValid( ptrFileContent ) )
+		return 1;
+	size_t endIndex = 0;
+	const char* filePath = strGetStdCString( ptrFileName, 0, &endIndex );
+	if( filePath ) {
+		FILE* file = fopen( filePath, "r" );
+		if( file ) {
+
+			char *buff = malloc( sizeof( char ) * newCreateSize ), *oldBuff = NULL;
+			size_t readBinCount = 0, writeBuffCount = 0, currentSize = newCreateSize;
+			BaseType basePtr;
+			basePtr.dataPtr = buff;
+			do {
+				readBinCount = fread( buff, sizeof( char ), newCreateSize, file );
+				strCAppend( ptrFileContent, basePtr, readBinCount );
+
+			} while( readBinCount == newCreateSize );
+
+			free( buff );
+			fclose( file );
+		}
+	}
+	return 1;
+}
+
+int strValid(const StrPtr* checkPtr) {
+	size_t ptr = checkPtr->ptr - ptrResourcesStartIndex, minPtr = getMinStrForeachIndex();
+	if( ptr < minPtr )
+		return 0;
+	return 1;
 }
 
 ArrayPtr arrayCreate() {

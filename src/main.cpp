@@ -156,10 +156,12 @@ void strTest() {
 	size_t index = 0;
 	stdCString = strGetStdCString( &strPtr, 1024, &index );
 	size_t charWidth = 0;
-	size_t getWidth = strGet( &strPtr, &str2,  &charWidth);
+	size_t getWidth = strGet( &strPtr, &str2, &charWidth );
 
 	strManageFree();
 }
+
+#include <fstream>
 
 int main() {
 	cout << "Hello CMake. " << (1024 << 2) << endl;
@@ -167,6 +169,28 @@ int main() {
 	testArray();
 	testForeachArray();
 	strTest();
+	StrPtr file = strCreate();
+	StrPtr content = strCreate();
+	StrPtr testCAppend = strCreate();
+	BaseType base;
+	base.dataPtr = "./file.txt";
+	std::ofstream oFile( "./file.txt" );
+	oFile << "这是一个文件";
+	oFile.close();
+	strCSet( &file, base, 100 );
+	BaseType base2;
+	size_t end = 0;
+	base2.dataPtr = "./file.txt";
+	strCAppend( &testCAppend, base2, 100 );
+	const char* cStrBuff = strGetStdCString( &testCAppend, 0, &end );
+	cout << " strGetStdCString( &testCAppend, 0, &end ) : => " << cStrBuff << endl;
+	base2.dataPtr = "这是一个文件";
+	cStrBuff = strGetStdCString( &testCAppend, 0, &end );
+	cout << " strGetStdCString( &testCAppend, 0, &end )" << cStrBuff << endl;
+	strCAppend( &testCAppend, base2, 100 );
+	strReadFile( &file, &content );
+	cStrBuff = strGetStdCString( &content, 0, &end );
+	strManageFree();
 	_CrtDumpMemoryLeaks();
 	return 0;
 }
