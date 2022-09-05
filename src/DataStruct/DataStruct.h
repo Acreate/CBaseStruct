@@ -7,8 +7,9 @@
 #pragma once
 
 #include <stddef.h>
-#include "DeclspecDll.h"
+#include "DataStruct_export.h"
 #include "ExternDataStruct.h"
+#define dllStatus DATASTRUCT_EXPORT
 ///////////////////////// 结构体
 #ifdef __cplusplus
 extern "C"{
