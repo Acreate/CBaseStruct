@@ -217,7 +217,7 @@ dllStatus const char* strGetStdCString(const StrPtr* ptr, size_t checkSize, size
  * @param dataSize 设置打字符串数据长度，若长度位置下不存在结束符，则设置为结束符，长度之前出现结束符，则按照最先出现长度设置
  * @return 字符串的长度
 */
-dllStatus size_t strCSet(const StrPtr* ptr, const BaseType data, size_t dataSize);
+dllStatus size_t strCSet(const StrPtr* ptr, const char* data, size_t dataSize);
 /**
  * @brief 追加一个标准的 C 字符串到末尾
  * @param ptr 字符串资源
@@ -225,15 +225,15 @@ dllStatus size_t strCSet(const StrPtr* ptr, const BaseType data, size_t dataSize
  * @param dataSize 设置打字符串数据长度，若长度位置下不存在结束符，则设置为结束符，长度之前出现结束符，则按照最先出现长度设置
  * @return 字符串资源的新长度
 */
-dllStatus size_t strCAppend(const StrPtr* ptr, const BaseType data, size_t dataSize);
+dllStatus size_t strCAppend(const StrPtr* ptr, const char* data, size_t dataSize);
 /**
  * @brief 获取字符串，它是跨平台的
  * @param ptr 字符串资源
  * @param data 获取到的字符串指针
- * @param charWidth 字符串指针存储的每个字符大小
+ * @param charWidth 字符串指针存储的每个字符大小，不需要时可以设置为 NULL
  * @return 整个字符串占用的字符个数
 */
-dllStatus size_t strGet(const StrPtr* ptr, const BaseType* data, size_t* charWidth);
+dllStatus size_t strGet(const StrPtr* ptr, BaseType* data, size_t* charWidth);
 /**
  * @brief 读取一个文件，若失败则返回
  * @param ptrFileName 文件名
