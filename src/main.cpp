@@ -150,9 +150,8 @@ void strTest() {
 	// 创建字符串
 	StrPtr strPtr = strCreate();
 	char cStr[] = "123213124";
-	str.dataPtr = cStr;
 	// 给字符串赋值
-	strCSet( &strPtr, str, 222 );
+	strCSet( &strPtr, cStr, 222 );
 	// 获取 C 字符串
 	const char* stdCString = strGetStdCString( &strPtr, 1024, 0 );
 	cStr[1] = 0;
@@ -175,11 +174,13 @@ void testStrAppendCStr() {
 	StrPtr content = strCreate();
 	StrPtr testCAppend = strCreate();
 	BaseType base;
-	base.dataPtr = "./file.txt";
 	std::ofstream oFile( "./file.txt" );
 	oFile << "这是一个被写入内容的文件";
 	oFile.close();
-	strCSet( &file, base, 100 );
+	strCSet( &file, "./file.txt", 100 );
+	size_t width;
+	strGet( &file, &base, &width );
+	cout << " strGet( &file, &base, &width ); : => " << (char*)base.dataPtr << endl;
 	const char* cStrBuff = strGetStdCString( &file, 0, NULL );
 	cout << " strGetStdCString( &file, 0, &end ) : => " << cStrBuff << endl;
 	BaseType base2;
@@ -193,7 +194,6 @@ void testStrAppendCStr() {
 	cout << " strGetStdCString( &testCAppend, 0, &end ) 1 " << cStrBuff << endl;
 	strCAppend( &testCAppend, "cStrBuff = strGetStdCString( &testCAppend, 0, &end );", 100 );
 	cStrBuff = strGetStdCString( &testCAppend, 0, NULL );
-	
 	cout << "cStrBuff = strGetStdCString( &testCAppend, 0, NULL ); : => " << cStrBuff << endl;
 	// 读取文件
 	int readFile = strReadFile( &file, &content );

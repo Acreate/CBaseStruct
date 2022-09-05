@@ -403,14 +403,13 @@ size_t strSize(const StrPtr* ptr) {
 	return 0;
 }
 
-size_t strCSet(const StrPtr* ptr, const BaseType data, size_t dataSize) {
+size_t strCSet(const StrPtr* ptr, const char* data, size_t dataSize) {
 	size_t index = ptr->ptr - ptrResourcesStartIndex, minIndex = getMinStrForeachIndex();;
 	if( index < minIndex ) {
 		// 获取最小长度
-		char* charData = data.dataPtr;
 		size_t foreachChar = 0;
 		for( ; foreachChar < dataSize; ++foreachChar ) {
-			if( charData[foreachChar] == '\0' ) {
+			if( data[foreachChar] == '\0' ) {
 				dataSize = foreachChar;
 				break;
 			}
@@ -420,7 +419,7 @@ size_t strCSet(const StrPtr* ptr, const BaseType data, size_t dataSize) {
 		if( newData ) {
 			foreachChar = 0;
 			for( ; foreachChar < dataSize; ++foreachChar )
-				newData[foreachChar] = charData[foreachChar];
+				newData[foreachChar] = data[foreachChar];
 			newData[dataSize] = '\0';
 			ptrStringMenoryManagment.strLen[index] = dataSize;
 			ptrStringMenoryManagment.dataWidth[index] = sizeof( char );
@@ -484,7 +483,8 @@ size_t strGet(const StrPtr* ptr, BaseType* data, size_t* charWidth) {
 	size_t index = ptr->ptr - ptrResourcesStartIndex, minIndex = getMinStrForeachIndex();;
 	if( index < minIndex ) {
 		*data = ptrStringMenoryManagment.datas[index];
-		*charWidth = ptrStringMenoryManagment.dataWidth[index];
+		if( charWidth )
+			*charWidth = ptrStringMenoryManagment.dataWidth[index];
 		return ptrStringMenoryManagment.strLen[index];
 	}
 	return 0;
