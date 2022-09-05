@@ -225,7 +225,7 @@ dllStatus size_t strCSet(const StrPtr* ptr, const BaseType data, size_t dataSize
  * @param dataSize 设置打字符串数据长度，若长度位置下不存在结束符，则设置为结束符，长度之前出现结束符，则按照最先出现长度设置
  * @return 字符串资源的新长度
 */
-dllStatus size_t strCAppend(const StrPtr* ptr, const BaseType data, size_t dataSize);
+dllStatus size_t strCAppend(const StrPtr* ptr, const char* data, size_t dataSize);
 /**
  * @brief 获取字符串，它是跨平台的
  * @param ptr 字符串资源

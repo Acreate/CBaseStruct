@@ -184,16 +184,17 @@ void testStrAppendCStr() {
 	cout << " strGetStdCString( &file, 0, &end ) : => " << cStrBuff << endl;
 	BaseType base2;
 	size_t end = 0;
-	base2.dataPtr = "./file.txt";
 	// 追加字符串
-	strCAppend( &testCAppend, base2, 100 );
+	strCAppend( &testCAppend, "./file.txt", 100 );
 	cStrBuff = strGetStdCString( &testCAppend, 0, &end );
 	cout << " strGetStdCString( &testCAppend, 0, &end ) : => " << cStrBuff << endl;
-	base2.dataPtr = "这是一个文件";
-	strCAppend( &testCAppend, base2, 100 );
+	strCAppend( &testCAppend, "这是一个文件", 100 );
 	cStrBuff = strGetStdCString( &testCAppend, 0, &end );
 	cout << " strGetStdCString( &testCAppend, 0, &end ) 1 " << cStrBuff << endl;
-	strCAppend( &testCAppend, base2, 100 );
+	strCAppend( &testCAppend, "cStrBuff = strGetStdCString( &testCAppend, 0, &end );", 100 );
+	cStrBuff = strGetStdCString( &testCAppend, 0, NULL );
+	
+	cout << "cStrBuff = strGetStdCString( &testCAppend, 0, NULL ); : => " << cStrBuff << endl;
 	// 读取文件
 	int readFile = strReadFile( &file, &content );
 	cStrBuff = strGetStdCString( &content, 0, &end );
