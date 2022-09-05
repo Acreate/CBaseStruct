@@ -238,7 +238,7 @@ dllStatus size_t strGet(const StrPtr* ptr, const BaseType* data, size_t* charWid
  * @brief 读取一个文件，若失败则返回
  * @param ptrFileName 文件名
  * @param ptrFileContent 文件内容
- * @return 成功返回 0，失败返回状态码
+ * @return 成功返回 0，失败返回状态码(大于 0 表示资源出现问题， 小于 0 表示文件出现问题)
 */
 dllStatus int strReadFile(const StrPtr* ptrFileName, StrPtr* ptrFileContent);
 /**

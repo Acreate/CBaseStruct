@@ -147,35 +147,37 @@ void testMapInster() {
 */
 void strTest() {
 	BaseType str, str2;
+	// 创建字符串
 	StrPtr strPtr = strCreate();
 	char cStr[] = "123213124";
 	str.dataPtr = cStr;
+	// 给字符串赋值
 	strCSet( &strPtr, str, 222 );
+	// 获取 C 字符串
 	const char* stdCString = strGetStdCString( &strPtr, 1024, 0 );
 	cStr[1] = 0;
 	size_t index = 0;
 	stdCString = strGetStdCString( &strPtr, 1024, &index );
 	size_t charWidth = 0;
+	// 获取资源字符串
 	size_t getWidth = strGet( &strPtr, &str2, &charWidth );
-
+	// 释放
 	strManageFree();
 }
 
 #include <fstream>
-
-int main() {
-	cout << "Hello CMake. " << (1024 << 2) << endl;
-	testMapInster();
-	testArray();
-	testForeachArray();
-	strTest();
+/**
+ * @brief 测试字符串追加的问题
+*/
+void testStrAppendCStr() {
+	// 创建字符串
 	StrPtr file = strCreate();
 	StrPtr content = strCreate();
 	StrPtr testCAppend = strCreate();
 	BaseType base;
 	base.dataPtr = "./file.txt";
 	std::ofstream oFile( "./file.txt" );
-	oFile << "这是一个文件";
+	oFile << "这是一个被写入内容的文件";
 	oFile.close();
 	strCSet( &file, base, 100 );
 	const char* cStrBuff = strGetStdCString( &file, 0, NULL );
@@ -183,6 +185,7 @@ int main() {
 	BaseType base2;
 	size_t end = 0;
 	base2.dataPtr = "./file.txt";
+	// 追加字符串
 	strCAppend( &testCAppend, base2, 100 );
 	cStrBuff = strGetStdCString( &testCAppend, 0, &end );
 	cout << " strGetStdCString( &testCAppend, 0, &end ) : => " << cStrBuff << endl;
@@ -190,11 +193,20 @@ int main() {
 	strCAppend( &testCAppend, base2, 100 );
 	cStrBuff = strGetStdCString( &testCAppend, 0, &end );
 	cout << " strGetStdCString( &testCAppend, 0, &end ) 1 " << cStrBuff << endl;
-	//strCAppend( &testCAppend, base2, 100 );
-	//strReadFile( &file, &content );
-	//cStrBuff = strGetStdCString( &content, 0, &end );
-	//cout << "strReadFile( &file, &content ); : => " << cStrBuff << endl;
+	strCAppend( &testCAppend, base2, 100 );
+	// 读取文件
+	int readFile = strReadFile( &file, &content );
+	cStrBuff = strGetStdCString( &content, 0, &end );
+	cout << "strReadFile( &file, &content ); : => " << cStrBuff << endl;
 	strManageFree();
-	_CrtDumpMemoryLeaks();
+}
+
+int main() {
+	cout << "Hello CMake. " << (1024 << 2) << endl;
+	testMapInster();
+	testArray();
+	testForeachArray();
+	strTest();
+	testStrAppendCStr();
 	return 0;
 }

@@ -567,13 +567,12 @@ static void arrayRemove(const size_t index) {
 int strReadFile(const StrPtr* ptrFileName, StrPtr* ptrFileContent) {
 	// 其中出现一个无效资源，那么就会被直接返回
 	if( strValid( ptrFileName ) || strValid( ptrFileContent ) )
-		return 1;
+		return -1;
 	size_t endIndex = 0;
 	const char* filePath = strGetStdCString( ptrFileName, 0, &endIndex );
 	if( filePath ) {
 		FILE* file = fopen( filePath, "r" );
 		if( file ) {
-
 			char *buff = malloc( sizeof( char ) * newCreateSize ), *oldBuff = NULL;
 			size_t readBinCount = 0, writeBuffCount = 0, currentSize = newCreateSize;
 			BaseType basePtr;
@@ -581,11 +580,10 @@ int strReadFile(const StrPtr* ptrFileName, StrPtr* ptrFileContent) {
 			do {
 				readBinCount = fread( buff, sizeof( char ), newCreateSize, file );
 				strCAppend( ptrFileContent, basePtr, readBinCount );
-
-			} while( readBinCount == newCreateSize );
-
+			} while( readBinCount != 0 );
 			free( buff );
 			fclose( file );
+			return 0;
 		}
 	}
 	return 1;
