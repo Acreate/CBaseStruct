@@ -12,7 +12,7 @@
 
 #### 申请内存的设置
 
-```
+```c++
 // 每次申请的内存都应该是 4 个单位
 setNewMemorySize( 4 );
 // 获取每次申请的内存单位个数
@@ -20,7 +20,7 @@ size_t newCount = getNewMemorySize() ;
 ```
 
 #### 数组
-```
+```c++
         // 申请一个数组
         ArrayPtr arrayPtr = arrayCreate();
 	// 释放数组
@@ -47,7 +47,7 @@ size_t newCount = getNewMemorySize() ;
 	arrayManageFree();
 
 ```
-```
+```c++
 
 /**
  * @brief 数组遍历函数
@@ -88,7 +88,7 @@ void testForeachArray() {
 ```
 
 #### 映射
-```
+```c++
 /**
  * @brief 测试映射创建与释放
 */
@@ -103,7 +103,7 @@ void testMap() {
 ```
 
 
-```
+```c++
 /**
  * @brief 映射插入元素回调函数
  * @param datas 映射列表中的数据,请不要对该指针进行重新分配, 但是它却可以进行重新赋值
