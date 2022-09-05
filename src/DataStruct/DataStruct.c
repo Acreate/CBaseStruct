@@ -415,20 +415,18 @@ size_t strCSet(const StrPtr* ptr, const BaseType data, size_t dataSize) {
 				break;
 			}
 		}
-		BaseType* oldData = ptrStringMenoryManagment.datas[index].dataPtr;
-		const size_t dataWidth = sizeof( char ), memsetSize = dataWidth * (dataSize + 1);
-		ptrStringMenoryManagment.datas[index].dataPtr = malloc( memsetSize );
-		if( !ptrStringMenoryManagment.datas[index].dataPtr )
-			ptrStringMenoryManagment.datas[index].dataPtr = oldData;
-		else {
+		const size_t dataWidth = sizeof( char ), memsetSize = dataSize;
+		char* newData = malloc( (memsetSize + 1) * dataWidth );
+		if( newData ) {
 			foreachChar = 0;
 			for( ; foreachChar < dataSize; ++foreachChar )
-				((char*)ptrStringMenoryManagment.datas[index].dataPtr)[foreachChar] = charData[foreachChar];
-			((char*)ptrStringMenoryManagment.datas[index].dataPtr)[dataSize] = '\0';
-			ptrStringMenoryManagment.strLen[index] = dataSize + 1;
+				newData[foreachChar] = charData[foreachChar];
+			newData[dataSize] = '\0';
+			ptrStringMenoryManagment.strLen[index] = dataSize;
 			ptrStringMenoryManagment.dataWidth[index] = sizeof( char );
-			if( oldData )
-				free( oldData );
+			if( ptrStringMenoryManagment.datas[index].dataPtr )
+				free( ptrStringMenoryManagment.datas[index].dataPtr );
+			ptrStringMenoryManagment.datas[index].dataPtr = newData;
 		}
 		return ptrStringMenoryManagment.strLen[index];
 	}
@@ -436,6 +434,7 @@ size_t strCSet(const StrPtr* ptr, const BaseType data, size_t dataSize) {
 	return 0;
 }
 
+// todo : 内存泄露， 无法释放 ？
 size_t strCAppend(const StrPtr* ptr, const BaseType data, size_t dataSize) {
 	size_t index = ptr->ptr - ptrResourcesStartIndex, minIndex = getMinStrForeachIndex();;
 	if( index < minIndex ) {
@@ -450,34 +449,30 @@ size_t strCAppend(const StrPtr* ptr, const BaseType data, size_t dataSize) {
 		}
 		// data 存在字符串可被追加
 		if( dataSize > 0 ) {
-			// 旧的字符串
-			char* oldData = ptrStringMenoryManagment.datas[index].dataPtr;
 			// 字符宽度
 			const size_t dataWidth = sizeof( char ),
-						// 新的字符串大小
-						memsetSize = (ptrStringMenoryManagment.strLen[index] + newCreateSize);
-			ptrStringMenoryManagment.datas[index].dataPtr = malloc( memsetSize * dataWidth );
+						// 新的字符串大小,但是不包含 \0
+						memsetSize = (ptrStringMenoryManagment.strLen[index] + dataSize);
+			// 旧的字符串
+			char* oldData = malloc( (memsetSize + 1) * dataWidth );
 			// 如果无法申请，则重置
-			if( !ptrStringMenoryManagment.datas[index].dataPtr )
-				ptrStringMenoryManagment.datas[index].dataPtr = oldData;
-
-			else {
+			if( oldData != NULL ) {
 				// 新字符串的当前下标
 				size_t maxIndex = ptrStringMenoryManagment.strLen[index],
 						// 目标字符串的下标
 						current = 0;
 				foreachChar = 0;
 				for( ; foreachChar < maxIndex; ++foreachChar )
-					((char*)ptrStringMenoryManagment.datas[index].dataPtr)[foreachChar] = oldData[foreachChar];
+					oldData[foreachChar] = ((char*)ptrStringMenoryManagment.datas[index].dataPtr)[foreachChar];
 				// 拷贝 data 源
 				for( ; current < dataSize; ++foreachChar, ++current )
-					((char*)ptrStringMenoryManagment.datas[index].dataPtr)[foreachChar] = ((char*)data.dataPtr)[current];
-
-				((char*)ptrStringMenoryManagment.datas[index].dataPtr)[dataSize] = '\0';
+					oldData[foreachChar] = ((char*)data.dataPtr)[current];
+				oldData[foreachChar] = '\0';
 				ptrStringMenoryManagment.strLen[index] = memsetSize;
 				ptrStringMenoryManagment.dataWidth[index] = sizeof( char );
-				if( oldData )
-					free( oldData );
+				if( ptrStringMenoryManagment.datas[index].dataPtr != NULL )
+					free( ptrStringMenoryManagment.datas[index].dataPtr );
+				ptrStringMenoryManagment.datas[index].dataPtr = oldData;
 			}
 			return ptrStringMenoryManagment.strLen[index];
 		}
