@@ -1,7 +1,16 @@
-# DataStruct
+# CDataStruct
 
 #### 介绍
 数据结构
+#### Visual Studio 调试
+![image](https://user-images.githubusercontent.com/42111480/188409104-ca956093-0de5-4093-9b2b-73f391bba1eb.png)
+#### clion 调试
+![image](https://user-images.githubusercontent.com/42111480/188410008-586e3c9f-b908-4779-875e-6ffb7907550c.png)
+
+![image](https://user-images.githubusercontent.com/42111480/188409875-57951c12-d977-4312-a38c-36524d1855cb.png)
+
+
+#### 申请内存的设置
 
 ```
 // 每次申请的内存都应该是 4 个单位
