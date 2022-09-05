@@ -201,6 +201,23 @@ void testStrAppendCStr() {
 	cout << "strReadFile( &file, &content ); : => " << cStrBuff << endl;
 	strManageFree();
 }
+/**
+ * @brief 测试字符串比较
+*/
+void testCompareStr() {
+	StrPtr strPtr1 = strCreate();
+	StrPtr strPtr2 = strCreate();
+	strCSet( &strPtr1, "123", 0 );
+	strCSet( &strPtr2, "123", 0 );
+	int compare = strCompare( &strPtr1, &strPtr2 );
+	strCSet( &strPtr2, "1234", 0 );
+	compare = strCompare( &strPtr1, &strPtr2 );
+	strCSet( &strPtr2, "124", 0 );
+	compare = strCompare( &strPtr1, &strPtr2 );
+	strCSet( &strPtr1, "194", 0 );
+	compare = strCompare( &strPtr1, &strPtr2 );
+	strManageFree();
+}
 
 int main() {
 	cout << "Hello CMake. " << (1024 << 2) << endl;
@@ -209,5 +226,6 @@ int main() {
 	testForeachArray();
 	strTest();
 	testStrAppendCStr();
+	testCompareStr();
 	return 0;
 }

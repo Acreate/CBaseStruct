@@ -247,6 +247,14 @@ dllStatus int strReadFile(const StrPtr* ptrFileName, StrPtr* ptrFileContent);
 * @return 成功返回0
 */
 dllStatus int strValid(const StrPtr* checkPtr);
+
+/**
+ * @brief 比较两个字符串
+ * @param left 左操作数字符串资源
+ * @param right 右操作数字符串资源
+ * @return 0 表示相等， -1 表示 left > right, 1 表示 left < right, -2 表示 left 失效(right 未检测), 2 表示 right 失效(left 有效)
+*/
+dllStatus int strCompare(const StrPtr* left, const StrPtr* right);
 /**
 * @brief 创建一个数组
 * @return 数组引用, 失败返回 NULL

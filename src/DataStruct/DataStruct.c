@@ -5,6 +5,7 @@
 #include "DataStruct.h"
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "math.h"
 
@@ -406,6 +407,8 @@ size_t strSize(const StrPtr* ptr) {
 size_t strCSet(const StrPtr* ptr, const char* data, size_t dataSize) {
 	size_t index = ptr->ptr - ptrResourcesStartIndex, minIndex = getMinStrForeachIndex();;
 	if( index < minIndex ) {
+		if( dataSize == 0 )
+			dataSize = UINT64_MAX;
 		// 获取最小长度
 		size_t foreachChar = 0;
 		for( ; foreachChar < dataSize; ++foreachChar ) {
@@ -590,6 +593,35 @@ int strValid(const StrPtr* checkPtr) {
 	if( ptr < minPtr )
 		return 0;
 	return 1;
+}
+
+int strCompare(const StrPtr* left, const StrPtr* right) {
+	size_t leftPtr = left->ptr - ptrResourcesStartIndex, rightPtr = right->ptr - ptrResourcesStartIndex, minPtr = getMinStrForeachIndex(), leftSize = 0, rightSize = 0, currentIndex = 0, minIndex = 0;
+	char *leftData, *rightData;
+	int64_t result = 0;
+	if( leftPtr >= minPtr )
+		return -2;
+	if( rightPtr >= minPtr )
+		return 2;
+	// 长度
+	leftSize = ptrStringMenoryManagment.strLen[leftPtr];
+	rightSize = ptrStringMenoryManagment.strLen[rightPtr];
+	minIndex = min( leftSize, rightSize );
+	leftData = ptrStringMenoryManagment.datas[leftPtr].dataPtr;
+	rightData = ptrStringMenoryManagment.datas[rightPtr].dataPtr;
+	for( ; currentIndex < minIndex; ++currentIndex ) {
+		result = leftData[currentIndex] - rightData[currentIndex];
+		if( result == 0 )
+			continue;
+		if( result < 0 )
+			return 1;
+		return -1;
+	}
+	if( leftSize > rightSize )
+		return -1;
+	else if( leftSize < rightSize )
+		return 1;
+	return 0;
 }
 
 ArrayPtr arrayCreate() {
