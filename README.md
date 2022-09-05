@@ -21,8 +21,17 @@ size_t newCount = getNewMemorySize() ;
 
 #### 数组
 ```c++
-        // 申请一个数组
-        ArrayPtr arrayPtr = arrayCreate();
+ 
+/**
+ * @brief 测试数组
+*/
+void testArray() {
+	// 改变申请内存大侠
+	setNewMemorySize( 4 );
+	ArrayPtr arrayPtr = arrayCreate();
+	// 创建数组
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
 	// 释放数组
 	int isFree = arrayFree( &arrayPtr );
 	// 初始化数组大小
@@ -41,30 +50,40 @@ size_t newCount = getNewMemorySize() ;
 	cout << "arrayPtr  start " << endl;
 	cout << "pr2  = " << pr2.strPtr->ptr << endl;
 	cout << "arrayPtr  end " << endl;
+
+	isFree = arrayFree( &arrayPtr );
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
 	// 自动释放没作用的数组
 	size_t arrayGc = arrayGC();
 	// 释放全部数组
 	arrayManageFree();
-
+}
 ```
 ```c++
 
 /**
  * @brief 数组遍历函数
  * @param resourcePtr 下标的资源
- * @param index 下标
  * @param arraySize 数组大小
- * @param attach 附加数据， 值为 0 (* attach == 0)时， 遍历下一个元素， 值为 -1 (* attach == -1)时，删除该数组，并且结束循环
 */
-void userDataCallBack(ResourcePtr* resourcePtr, const size_t index, const size_t arraySize, void* attach) {
-	if( index == 100 ) {
+void userDataCallBack(ResourcePtr* resourcePtr, const size_t arraySize) {
+	if( arraySize >= 100 ) {
 		cout << "resourcePtr->strPtr->ptr " << endl;
-		cout << resourcePtr->strPtr->ptr << endl;
-		resourcePtr->strPtr->ptr = 323;
+		cout << resourcePtr[100].strPtr->ptr << endl;
+		resourcePtr[100].strPtr->ptr = 323;
 		cout << "change over " << endl;
 		arrayCreate();
 	}
-
 }
 
 /**
@@ -85,6 +104,7 @@ void testForeachArray() {
 	cout << pr2.strPtr->ptr << endl;
 	arrayManageFree();
 }
+
 ```
 
 #### 映射
@@ -105,6 +125,18 @@ void testMap() {
 
 ```c++
 /**
+ * @brief 测试映射创建与释放
+*/
+void testMap() {
+	// 创建映射对象
+	MapPtr mapPtr = mapCreate();
+	// 释放映射对象
+	size_t mapGc = mapFree( &mapPtr );
+	// 释放所有映射对象
+	mapGc = mapManageFree();
+}
+
+/**
  * @brief 映射插入元素回调函数
  * @param datas 映射列表中的数据,请不要对该指针进行重新分配, 但是它却可以进行重新赋值
  * @param size 引用的 datas 大小, 重置 datas 时, 应当重置该数值
@@ -114,6 +146,7 @@ void testMap() {
 int mapInsterCallBack(PairPtr* datas, size_t* size, PairPtr* pair) {
 	return 1;
 }
+
 /**
  * @brief 遍历元素时回调函数
  * @param datas 映射对象的数组
