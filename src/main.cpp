@@ -1,19 +1,17 @@
-# DataStruct
+﻿// Sqlite3.cpp: 定义应用程序的入口点。
+//
 
-#### 介绍
-数据结构
-
-```
-// 每次申请的内存都应该是 4 个单位
-setNewMemorySize( 4 );
-// 获取每次申请的内存单位个数
-size_t newCount = getNewMemorySize() ;
-```
-
-#### 数组
-```
-        // 申请一个数组
-        ArrayPtr arrayPtr = arrayCreate();
+#include "main.h"
+#include "DataStruct.h"
+using namespace std;
+/**
+ * @brief 测试数组
+*/
+void testArray() {
+	setNewMemorySize( 4 );
+	ArrayPtr arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
 	// 释放数组
 	int isFree = arrayFree( &arrayPtr );
 	// 初始化数组大小
@@ -32,30 +30,38 @@ size_t newCount = getNewMemorySize() ;
 	cout << "arrayPtr  start " << endl;
 	cout << "pr2  = " << pr2.strPtr->ptr << endl;
 	cout << "arrayPtr  end " << endl;
+
+	isFree = arrayFree( &arrayPtr );
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
+	arrayPtr = arrayCreate();
 	// 自动释放没作用的数组
 	size_t arrayGc = arrayGC();
 	// 释放全部数组
 	arrayManageFree();
-
-```
-```
+}
 
 /**
  * @brief 数组遍历函数
  * @param resourcePtr 下标的资源
- * @param index 下标
  * @param arraySize 数组大小
- * @param attach 附加数据， 值为 0 (* attach == 0)时， 遍历下一个元素， 值为 -1 (* attach == -1)时，删除该数组，并且结束循环
 */
-void userDataCallBack(ResourcePtr* resourcePtr, const size_t index, const size_t arraySize, void* attach) {
-	if( index == 100 ) {
+void userDataCallBack(ResourcePtr* resourcePtr, const size_t arraySize) {
+	if( arraySize >= 100 ) {
 		cout << "resourcePtr->strPtr->ptr " << endl;
-		cout << resourcePtr->strPtr->ptr << endl;
-		resourcePtr->strPtr->ptr = 323;
+		cout << resourcePtr[100].strPtr->ptr << endl;
+		resourcePtr[100].strPtr->ptr = 323;
 		cout << "change over " << endl;
 		arrayCreate();
 	}
-
 }
 
 /**
@@ -76,10 +82,7 @@ void testForeachArray() {
 	cout << pr2.strPtr->ptr << endl;
 	arrayManageFree();
 }
-```
-    
-#### 映射
-```
+
 /**
  * @brief 测试映射创建与释放
 */
@@ -91,10 +94,7 @@ void testMap() {
 	// 释放所有映射对象
 	mapGc = mapManageFree();
 }
-```
-    
-    
-```
+
 /**
  * @brief 映射插入元素回调函数
  * @param datas 映射列表中的数据,请不要对该指针进行重新分配, 但是它却可以进行重新赋值
@@ -105,6 +105,7 @@ void testMap() {
 int mapInsterCallBack(PairPtr* datas, size_t* size, PairPtr* pair) {
 	return 1;
 }
+
 /**
  * @brief 遍历元素时回调函数
  * @param datas 映射对象的数组
@@ -140,4 +141,32 @@ void testMapInster() {
 	mapGetPairs( &mapPtr, mapForeachCallBack );
 	mapManageFree();
 }
-```
+
+/**
+ * @brief 字符串资源测试
+*/
+void strTest() {
+	BaseType str, str2;
+	StrPtr strPtr = strCreate();
+	char cStr[] = "123213124";
+	str.dataPtr = cStr;
+	strCSet( &strPtr, str, 222 );
+	const char* stdCString = strGetStdCString( &strPtr, 1024, 0 );
+	cStr[1] = 0;
+	size_t index = 0;
+	stdCString = strGetStdCString( &strPtr, 1024, &index );
+	size_t charWidth = 0;
+	size_t getWidth = strGet( &strPtr, &str2,  &charWidth);
+
+	strManageFree();
+}
+
+int main() {
+	cout << "Hello CMake. " << (1024 << 2) << endl;
+	testMapInster();
+	testArray();
+	testForeachArray();
+	strTest();
+	_CrtDumpMemoryLeaks();
+	return 0;
+}
