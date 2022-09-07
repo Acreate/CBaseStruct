@@ -9,7 +9,11 @@
 #include <stddef.h>
 #include "DataStruct_export.h"
 #include "ExternDataStruct.h"
+#ifdef DATASTRUCT_EXPORT
 #define dllStatus DATASTRUCT_EXPORT
+#else
+#define dllStatus
+#endif
 ///////////////////////// 结构体
 #ifdef __cplusplus
 extern "C"{
@@ -23,6 +27,9 @@ extern "C"{
  * @brief 数据类型的下标开始
  */
 #define  dataStructTypeMakeIndex 0xff
+/**
+ * @brief 建议用户开始下标
+ */
 #define  dataStructUserTypeMakeIndex (dataStructTypeMakeIndex >> 4)
 
 /**
@@ -92,7 +99,7 @@ dllStatus typedef struct _SqlResourcePtr {
 dllStatus typedef struct _BaseType {
 	/**
 	 * @brief 基础类型，使用时候直接使用强制类型转换\n
-	 * 因为它是位置的，只能使用客官的内存读取\n
+	 * 因为它是未知的，只能使用客官的内存读取\n
 	 * 如 int p = *(int*)data;\n
 	 * 有的时候他是一个不清晰的数组指针\n
 	 * 如 int* p = (int*)data;\n

@@ -20,7 +20,7 @@ size_t newCount = getNewMemorySize() ;
  * @brief 测试数组
 */
 void testArray() {
-	// 改变申请内存大侠
+	// 改变申请内存大小
 	setNewMemorySize( 4 );
 	ArrayPtr arrayPtr = arrayCreate();
 	// 创建数组

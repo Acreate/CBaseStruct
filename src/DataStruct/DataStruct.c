@@ -134,9 +134,11 @@ static MapManagment ptrMapMenoryManagment = {NULL, NULL, NULL, NULL, 0, 0};
  * @brief 兼容编译平台
  */
 #ifndef min
-#define min __min
+#define min( a, b ) ( ((a)>(b)) ? (b):(a) )
 #endif
-
+#ifndef max
+#define max( a, b ) ( ((a)>(b)) ? (a):(b) )
+#endif
 /**
  * @brief 用于获取字符串集管理的最小长度
  */

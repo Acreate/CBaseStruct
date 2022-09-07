@@ -8,8 +8,10 @@ using namespace std;
  * @brief 测试数组
 */
 void testArray() {
+	// 改变申请内存大小
 	setNewMemorySize( 4 );
 	ArrayPtr arrayPtr = arrayCreate();
+	// 创建数组
 	arrayPtr = arrayCreate();
 	arrayPtr = arrayCreate();
 	// 释放数组
